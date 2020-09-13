@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+article{height: 743px;width:652px;position:relative;left:171px;}
+div#joinMain{margin-top: 50px;height: 655px;}
+table td{padding:7px;}
+table td input{width:180px;height:30px;padding-bottom: 5px; }
+
+input#address2{width:360px;}
+input.tel{width:120px;}
+select#tel1{width:60px;height: 40px;}
+article{margin: 0; width: 617px; position: relative; left: 188px;height: 100%;}
+input#address1{margin-bottom:10px;}
+table#join{display: inline-block;position:absolute;left:30px;margin-top: 20px;}
+span#title{font-size: 34px;margin-left: 69px;}
+input.gender{width:20px;height: 15px;}
+input.ssn{width:120px;}
+button#submitBtn{width:150px;height:40px;margin-top:40px;font-size: 20px;}
+.selectBox{width:120px;}
+input#submitBtn{width:60%;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

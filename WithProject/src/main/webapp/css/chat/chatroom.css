@@ -1,0 +1,21 @@
+@charset "UTF-8";
+body{position:relative;margin:0px;padding:0px;}
+div#section{position:relative;}
+.profileImg{border-radius:50%;float: left;width: 65px;padding:5px; height: 65px;}
+#bottomBar{left: 0px;position:fixed;bottom: 0px;background: gray;height: 154px;width:100%;}
+#bottomBar ul{list-style: none;margin-top:0px;}
+#bottomBar ul li{list-style-type: none;float:left;padding: 8px 10% 10px 0px}
+.chatMain ul{list-style: none;padding-inline-start: 10px;margin-block-start: 5px;margin-block-end:5px;margin-inline-end:10px;}
+.other{text-align: left;min-height:60px; position: relative;}
+.me{text-align: right;position: relative;min-height:60px;}
+.userName{font-size: 20px;font-weight: 600;}
+.me .birthImg{border-radius:50%;float: right;width: 50px;padding:5px;}
+.other .birthImg{border-radius:50%;float: right;width: 50px;padding:5px;}
+/* .me .msg{position: relative;top: 8px;float: right;} */
+/* .other .msg{position: relative;top: 8px;float: left;} */
+textarea{width:99%;border: none;display: relative;border-top: 1px solid black;}
+button{position: absolute;top: 20px;padding:7px;right: 13px;}	
+.chatMain{width:100%;height: 512px;background: #acdec38c;overflow-y: scroll;}
+.chatline{list-style: none;padding: 0px 3px 24px 0px;}
+.chatline li{padding: 0px 0px 12px 0px;width:65%;float: right;}
+.msg{display: inline-block;;border:1px solid #b3b0b0;padding: 5px;border-radius: 15px;}

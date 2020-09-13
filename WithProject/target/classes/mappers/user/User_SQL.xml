@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="usersDAO">
+	<insert id="insertUsers">
+			INSERT INTO USERS(
+				USER_SEQ,
+				USER_ID,
+				PASSWORD,
+				USER_NAME,
+				BIRTH,
+				PHONE) 
+			VALUES(
+					(SELECT NVL(MAX(USER_SEQ),0)+1 FROM USERS AS SUB) ,
+					#{userId},
+					#{userPwd},
+					#{userName},
+					#{birth},
+					#{phone} 
+					)
+	</insert>
+	
+	<select id="selectCheckId" resultType="string">
+		SELECT USER_ID 
+		FROM USERS
+		WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="selectUserInfo" resultType="com.doyun.doyun.user.dto.UserVO">
+		SELECT USER_SEQ,
+				USER_ID,
+				USER_NAME,
+				PASSWORD,
+				BIRTH,
+				PHONE,
+				NICK_NAME,
+				STATUS_MESSAGE,
+				(SELECT CONCAT(SAVE_FILE_PATH,SAVE_FILE_NAME) FROM FILES WHERE FILE_SEQ=IMG_SEQ) AS  IMAGE_URL,
+				(SELECT CONCAT(SAVE_FILE_PATH,SAVE_FILE_NAME) FROM FILES WHERE FILE_SEQ=BACKGROUND_IMG_SEQ) AS BACKGROUND_IMG
+		FROM USERS
+		WHERE USER_ID=#{userId} 
+	</select>
+	<update id="updateUserProfileImage">
+		UPDATE USERS SET IMG_SEQ=#{imageUrl} 
+		WHERE USER_SEQ=#{userSeq}
+	</update>
+	<select id="usersDAO.selectFilePath" resultType="cMap">
+		SELECT SAVE_FILE_PATH,
+				SAVE_FILE_NAME,
+				FILE_NAME
+		FROM USERS A, FILES B
+		WHERE A.IMG_SEQ=B.FILE_SEQ
+		AND USER_SEQ=#{userSeq}
+	</select>
+	<update id="updateUserProfileInfo">
+		UPDATE USERS SET STATUS_MESSAGE=#{statusMsg} , NICK_NAME=#{nickName} 
+		WHERE USER_SEQ=#{userSeq}
+	</update>
+	<select id="usersDAO.selectUserId" resultType="string">
+		SELECT USER_ID
+		FROM USERS
+		WHERE USER_SEQ=#{userSeq}
+	</select>
+</mapper>
+

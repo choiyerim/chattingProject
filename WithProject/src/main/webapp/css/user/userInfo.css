@@ -1,0 +1,26 @@
+@charset "UTF-8";
+body{position:relative;margin:0px;}
+div#section{position:relative;}
+.profileImg{border-radius:50%;width: 100px;padding:5px;margin-top: 85%; position: relative;height: 100px;}
+.userName{font-size: 20px;}
+#bottomBar2{left: 0px;position:fixed;bottom: 0px;background: none;height: 70px;width:100%;}
+#bottomBar2 table{width:100%;}
+#bottomBar2 table td{text-align: center;}
+.birthImg{border-radius:50%;float: left;width: 50px;padding:5px;}
+.myImgZone{height: 699px;text-align: center;}
+.btmImg{border-radius:50%;width: 50px;padding:5px;cursor: pointer;}
+.background-img:after{width:100%;height: 700px;background-color: #80808059;text-align: center;background-repeat: no-repeat;opacity: 0.9}
+.userName{font-size: 25px;font-weight: 500;color:white;margin:5px 0px 3px 0px;text-overflow: ellipsis;overflow: hidden;max-width: 497px;border-bottom: 1px solid #ffffff99;}
+.status-msg{font-size: 20px;font-weight: 300;color:white;margin:5px 0px 3px 0px;text-overflow: ellipsis;overflow: hidden;max-width: 497px;border-bottom: 1px solid #ffffff99;}
+.profileFile-edit{position: absolute;width:35px;top: 500px;right: 181px;background: white;border-radius: 50%;}
+.miniIcon{width:30px;}
+.miniIcon2{width:30px;float: right;}
+.arrow{float:left;width:40px;cursor: pointer;}
+.imgWrap{text-align: center;}
+p{text-align: center;}
+
+
+
+
+
+

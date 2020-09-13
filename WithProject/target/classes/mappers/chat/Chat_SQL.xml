@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+
+<mapper namespace="chatDAO">
+	<resultMap type="com.doyun.doyun.user.dto.FriendVO" id="friendList">
+		<result column="FRIEND_NO" property="friendNo"/>
+		<result column="USER_NAME" property="userName"/>
+		<result column="BIRTH" property="birth"/>
+		<result column="NICK_NAME" property="nickName"/>
+		<result column="STATUS_MESSAGE" property="statusMessage"/>
+		<result column="IMG_SEQ" property="imageUrl"/>
+	</resultMap>
+	
+	
+	<select id="selectUserFriendList" resultMap="friendList">
+		SELECT B.FRIEND_NO,
+				A.USER_NAME,
+				A.NICK_NAME,
+				A.BIRTH,
+				A.STATUS_MESSAGE,
+				(SELECT CONCAT(SAVE_FILE_PATH,SAVE_FILE_NAME) FROM FILES WHERE FILE_SEQ=A.IMG_SEQ) AS  IMAGE_URL
+		FROM USERS A, USER_FRIENDS B
+		WHERE A.USER_SEQ=B.FRIENDS_SEQ
+		AND B.USER_SEQ=#{userSeq}
+	</select>
+	<select id="selectFriendCnt" resultType="int">
+		SELECT COUNT(*) 
+		FROM USER_FRIENDS 
+		WHERE USER_SEQ=#{userSeq}
+		AND HIDE_YN='N' AND BLACK_YN='N'
+	</select>
+	<select id="selectFriendSeq" resultType="int">
+		SELECT FRIENDS_SEQ
+		FROM USER_FRIENDS
+		WHERE USER_SEQ=#{userSeq} AND FRIEND_NO=#{friendNo}
+	</select>
+	<select id="selectChatroom" resultType="string">
+		SELECT CHATROOM_NO
+		FROM CHATROOM_JOIN
+		<![CDATA[
+		WHERE (ROOM_CREATE_USER_SEQ=#{userSeq} AND JOIN_USER_SEQ=#{friendSeq})
+		OR (JOIN_USER_SEQ=#{userSeq} AND ROOM_CREATE_USER_SEQ=#{friendSeq} ) 
+		]]>
+	</select>
+	<insert id="insertChatroom">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(INCREASE_SEQ),0)+1 FROM CHATROOM
+		</selectKey>
+		INSERT INTO CHATROOM(
+			CHATROOM_NO,
+			CREATE_USER_SEQ,
+			INCREASE_SEQ
+		)VALUES(
+			(SELECT CONCAT(#{code},#{seq})),
+			#{userSeq},
+			#{seq}
+		)
+	</insert>
+	<insert id="insertChatroomJoin">
+		INSERT INTO CHATROOM_JOIN(
+			CHATROOM_NO,
+			ROOM_CREATE_USER_SEQ,
+			JOIN_USER_SEQ
+		)VALUES(
+			#{code},
+			#{userSeq},
+			#{friendSeq}		
+		)
+	</insert>
+	<select id="chatDAO.selectFriendName" resultType="string">
+		SELECT NVL(NICK_NAME,USER_NAME) AS NICK_NAME,
+			(SELECT CONCAT(SAVE_FILE_PATH,SAVE_FILE_NAME) FROM FILES WHERE FILE_SEQ=IMG_SEQ) AS IMAGE_URL
+		FROM USERS
+		WHERE USER_SEQ=#{friendSeq}
+	</select>
+	<select id="selectFriendNameByChatroomNo" resultType="cMap">
+		select b.user_name,
+			(SELECT CONCAT(SAVE_FILE_PATH,SAVE_FILE_NAME) FROM FILES WHERE FILE_SEQ=IMG_SEQ) AS IMAGE_URL
+		from chatroom_join a, users b
+		where a.join_user_seq=b.user_seq
+		and chatroom_no=#{roomCode}
+	</select>
+</mapper>
