@@ -10,11 +10,12 @@
 
 
 --개발 환경
-Window10
-Eclipse
-Java 8
-MariaDB(유저 관리)
-MongoDB(채팅 관리)
+<br/>
+Window10<br/>
+Eclipse<br/>
+Java 8<br/>
+MariaDB(유저 관리)<br/>
+MongoDB(채팅 관리)<br/>
 
 
 
