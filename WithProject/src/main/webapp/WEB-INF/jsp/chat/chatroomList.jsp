@@ -23,7 +23,7 @@
 .last-msg{max-width: 360px;padding-left: 27px;}
 .room{position: absolute;max-width: 360px;overflow: hidden;text-overflow: ellipsis;left: 15%;font-size: 16px;font-weight: 550;}
 </style>
-</head>
+</head> 
 <body>
 	<h2>채팅 목록</h2> 
 	<div class="searchBar">
