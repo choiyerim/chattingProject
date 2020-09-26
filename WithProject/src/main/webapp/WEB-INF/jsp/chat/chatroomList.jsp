@@ -25,7 +25,7 @@
 </style>
 </head>
 <body>
-	<h2>채팅 목록</h2>
+	<h2>채팅 목록</h2> 
 	<div class="searchBar">
 		<input type="text" name="searchKeyword" id="searchBox" placeholder="채팅방 이름, 참여자 검색" />
 	</div>
