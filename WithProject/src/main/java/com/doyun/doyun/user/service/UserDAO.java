@@ -48,4 +48,8 @@ public class UserDAO {
 		return sqlSession.selectOne("usersDAO.selectUserId",paramMap);
 	}
 
+	public void insertUserFriend(Map param) {
+		sqlSession.insert("usersDAO.insertUserFriend",param);
+	}
+
 }

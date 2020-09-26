@@ -89,7 +89,7 @@ function editMyProfilePhoto(){
 		type:'post',
 		success:function(data){
 			var dt=data.saveFilePath+data.saveFileName;
-			$('profileImg').attr('src',dt);
+			$('.profileImg').attr('src',dt);
 		}
 
 		});

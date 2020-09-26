@@ -21,6 +21,8 @@ public interface ChatService {
 
 	String selectFriendName(HashMap<String, Object> param);
 
-	Map selectFriendName(String roomCode);
+	Map selectFriendNameByRoomCode(Map param);
+
+	List selectMyChatroomList(UserVO user);
 
 }

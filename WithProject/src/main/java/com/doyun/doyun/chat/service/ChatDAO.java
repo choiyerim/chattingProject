@@ -42,7 +42,11 @@ public class ChatDAO {
 		String str=(String) param.get("code")+result;
 		//chatroom_join테이블에도 insert
 		param.put("code", str);
-		sqlSession.insert("chatDAO.insertChatroomJoin",param);
+		List list=(List) param.get("list");
+		for(int i=0;i<list.size();i++) {
+			param.put("friendSeq", list.get(i));
+			sqlSession.insert("chatDAO.insertChatroomJoin",param);			
+		}
 		return  str;
 	}
 
@@ -50,7 +54,15 @@ public class ChatDAO {
 		return (String) sqlSession.selectOne("chatDAO.selectFriendName",param);
 	}
 
-	public Map selectFriendName(String roomCode) {
+	public Map selectFriendNameByRoomCode(Map roomCode) {
 		return (Map) sqlSession.selectOne("chatDAO.selectFriendNameByChatroomNo",roomCode);
+	}
+
+	public List selectMyChatroomList(UserVO user) {
+		return sqlSession.selectList("chatDAO.selectMyChatroomList", user);
+	}
+
+	public String selectChatroomUserList(String chatroomNo) {
+		return sqlSession.selectOne("chatDAO.selectChatroomUserList",chatroomNo);
 	}
 }

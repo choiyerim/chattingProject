@@ -1,6 +1,7 @@
 package com.doyun.doyun.files.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -12,7 +13,8 @@ public class FileDAO {
 	@Inject
 	SqlSessionTemplate sqlSession;
 
-	public int insertFiles(HashMap<String, String> fileMap) {
-		return sqlSession.insert("fileDAO.insertFiles",fileMap);
+	public HashMap<String, Object> insertFiles(HashMap<String, Object> fileMap) {
+		sqlSession.insert("fileDAO.insertFiles",fileMap);
+		return fileMap;
 	}
 }

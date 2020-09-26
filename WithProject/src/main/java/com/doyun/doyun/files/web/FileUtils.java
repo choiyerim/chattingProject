@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -34,12 +35,12 @@ public class FileUtils {
 		UserVO loginVO=(UserVO) request.getSession().getAttribute("loginVO");
 		String path=request.getSession().getServletContext().getRealPath("/upload/");
 		if(loginVO.getImageUrl()!=null) {
-			path=path+loginVO.getImageUrl();
-			File delFile=new File(path);
+			String delPath=path+(loginVO.getImageUrl().replace("/upload/", "").replace("/", "\\"));
+			System.out.println(delPath);
+			File delFile=new File(delPath);
 			if(delFile.exists()) {
 				delFile.delete();
 			}
-			
 		}
 		FileReader read;
 		ServletContext sc=request.getSession().getServletContext();
@@ -69,15 +70,16 @@ public class FileUtils {
 		files.transferTo(file);
 		
 		
-		HashMap<String, String> fileMap=new HashMap<String, String>();
+		HashMap<String, Object> fileMap=new HashMap<String, Object>();
 		fileMap.put("saveFilePath","/upload/"+saveFilePath);
 		fileMap.put("saveFileName", saveFileName);
 		fileMap.put("originalFileName", originalFileName);
 		fileMap.put("userSeq", String.valueOf(loginVO.getUserSeq()));
 		
-		int result=fileService.insertFiles(fileMap);
+		HashMap<String, Object> result=fileService.insertFiles(fileMap);
+		int res=Integer.parseInt(result.get("fileSeq").toString());
 		
-		return result;
+		return res;
 	}
 
 

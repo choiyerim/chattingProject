@@ -56,6 +56,11 @@ public class UserServiceImpl implements UserService {
 		return userDAO.selectUserId(paramMap);
 	}
 
+	@Override
+	public void insertUserFriend(Map param) {
+		userDAO.insertUserFriend(param);
+	}
+
 //	@Override
 //	public UserVO selectUserLoginInfo(Map paramMap) {
 //		UserVO user=repo.fineByUserIdAndPassword(paramMap.get("userId").toString(), paramMap.get("password").toString());

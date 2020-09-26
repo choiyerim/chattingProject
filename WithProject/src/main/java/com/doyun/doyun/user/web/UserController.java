@@ -122,7 +122,7 @@ public class UserController {
 	
 	@ResponseBody
 	@RequestMapping("/user/userPhotoEdit")
-	public HashMap<String,String> updateUserProfileFile(HttpServletRequest request) throws IOException {
+	public HashMap<String,String> updateUserProfileFile(HttpServletRequest request,HttpSession session) throws IOException {
 		String pathName="userProfile";
 		MultipartHttpServletRequest multi=(MultipartHttpServletRequest) request;
 		MultipartFile file=multi.getFile("profileImg");
@@ -133,7 +133,12 @@ public class UserController {
 		loginVO.setImageUrl(String.valueOf(fileSeq));
 		//fileSeq를 업데이트 한다.
 		userService.updateUserProfileImg(loginVO);
-		HashMap<String, String> savePath=userService.selectFilePath(fileSeq);
+		Map param=new HashMap<String,String>();
+		param.put("userId",loginVO.getUserId());
+		loginVO=userService.selectUserInfo(param);
+		session.removeAttribute("loginVO");
+		session.setAttribute("loginVO", loginVO);
+		HashMap<String, String> savePath=userService.selectFilePath(loginVO.getUserSeq());
 		
 		return savePath;
 	}
@@ -156,6 +161,22 @@ public class UserController {
 		return "user/findFriendView";
 	}
 	
+	@ResponseBody
+	@RequestMapping("/user/findFriendById")
+	public UserVO findFriendById(Model model,@RequestParam Map param) {
+		 UserVO userVO=userService.selectUserInfo(param);
+		return userVO;
+	}
+	
+	@RequestMapping("/user/addFriend")
+	public String addFrined(@RequestParam Map param,HttpSession session) {
+		UserVO user=(UserVO) session.getAttribute("loginVO");
+		param.put("userSeq",user.getUserSeq());
+		System.out.println(param);
+		userService.insertUserFriend(param);
+		UserKey userKey=(UserKey) session.getAttribute("userKey");
+		return "redirect:/user/friendList/"+userKey.getUserKey();
+	}
 	
 	
 }

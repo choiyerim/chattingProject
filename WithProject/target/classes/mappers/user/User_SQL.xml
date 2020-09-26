@@ -62,5 +62,17 @@
 		FROM USERS
 		WHERE USER_SEQ=#{userSeq}
 	</select>
+	<insert id="usersDAO.insertUserFriend">
+		INSERT INTO USER_FRIENDS
+		(
+			USER_SEQ,
+			FRIENDS_SEQ,
+			FRIEND_NO
+		)VALUES(
+			#{userSeq},
+			(SELECT USER_SEQ FROM USERS WHERE USER_ID=#{frId}),
+			(SELECT NVL(MAX(FRIEND_NO),0)+1 FROM USER_FRIENDS A WHERE A.USER_SEQ=#{userSeq})
+		)
+	</insert>
 </mapper>
 

@@ -93,6 +93,7 @@ public class ChatController {
 		param.put("friendSeq",friendSeq);
 		String chatroomNo=chatService.selectChatroom(param);
 		String friendName=chatService.selectFriendName(param);
+		List userList=new ArrayList();
 		if(chatroomNo==null) {
 //			채팅방 생성 및 chatroom_join테이블에 데이터 insert
 //			채팅룸을 생성하기 전, 채팅 방 코드 지정. 1:1 채팅의 경우 맨 앞에 P, 단체 채팅의 경우 M을 붙인다.
@@ -105,6 +106,9 @@ public class ChatController {
 			}
 			code+=buf;
 			param.put("code", code);
+			userList.add(param.get("userSeq"));
+			userList.add(param.get("friendSeq"));
+			param.put("list",userList);
 			String roomCode=chatService.insertChatroom(param);
 			param.put("chatroomNo", roomCode);
 			param.put("friendName",friendName);
@@ -117,15 +121,39 @@ public class ChatController {
 	}
 	
 	@RequestMapping("/chatroom/{roomCode}")
-	public ModelAndView chatroom(@RequestParam Map paramMap,ModelAndView mav,@PathVariable String roomCode) {
+	public ModelAndView chatroom(@RequestParam Map param,ModelAndView mav,@PathVariable String roomCode,HttpSession session) {
 		//pathValue가 채팅방 이름
 		//mongoDB에서 json형태로 된 데이터를 가져오게 한다.
+		UserVO user=(UserVO) session.getAttribute("loginVO");
+		param.put("roomCode",roomCode);
+		param.put("userSeq",user.getUserSeq());
 		List<MessageVO> chatList=chatContentService.selectChatList(roomCode);
-		Map friend=chatService.selectFriendName(roomCode);
+		Map friend=chatService.selectFriendNameByRoomCode(param);
 		mav.addObject("messageList",chatList);
 		mav.addObject("chatroomNo",roomCode);
 		mav.addObject("fr",friend);
 		mav.setViewName("chat/chatroom");
+		return mav;
+	}
+	
+	@RequestMapping("/chat/chatroomList/{userKey:.+}")
+	public ModelAndView chatroomList(@RequestParam Map paramMap,ModelAndView mav,@PathVariable String userKey,HttpSession session) {
+		//userKey와 loginSession을 비교한다.
+		//혹시 모르는 해킹을 대비한다.
+		UserVO user=(UserVO) session.getAttribute("loginVO");
+		//에러 처리를 위해 $$$로 replace처리를 한 userkey를 다시 원래대로 변환
+		String userKeys=userKey.replace("$$$", "/");
+		boolean bool=pwd.matches("user_key"+user.getUserSeq(), userKeys);
+		if(bool) {
+			List chatroomList=chatService.selectMyChatroomList(user);
+			mav.addObject("chatroomList",chatroomList);
+			mav.setViewName("chat/chatroomList");
+		}else {
+			mav.addObject("message","잘못된 접근입니다.");
+			mav.addObject("url","/prepared");
+			mav.setViewName("common/message");
+		}
+		
 		return mav;
 	}
 

@@ -21,43 +21,34 @@ function doNotReload(){
         event.returnValue = false;
     } 
 }
-document.onkeydown = doNotReload;
-$(function(){
-	window.resize(500,700)
-})
 </script>
+<style>
+	td{display: table-caption;}
+	
+</style>
 </head>
 <body>
-<h2>친구</h2>
+<h2>친구 찾기</h2>
 
 
 <div id="section">
-	<table class="mainField">
+	<table class="mainFieldFriend">
 		<thead>
 			<colgroup>
 				<col width="20%" />
 				<col width="80%" />
 			</colgroup>
 			<tr class="lineBtm">
-				<th class="touch" onclick="updateMyInfo();">
-<!-- 					profileImage -->
-					<img src="${empty sessionScope.loginVO.imageUrl?'/images/chat/defaultUserImg.png':sessionScope.loginVO.imageUrl }" class="profileImg" alt="프로필"  />
-				</th>
-					<td>
-						<span class="userName">
-							${not empty sessionScope.loginVO.nickName?sessionScope.loginVO.nickName:sessionScope.loginVO.userName  }
-						</span>
-						<p class="statusMessage">${sessionScope.loginVO.statusMessage }피곤하다....</p>
-					</td>
+				<p>아이디 검색</p>
+				
+				<input type="text" name="friendId" class="findFriend" id="friendId"  />
+				<img src="/images/chat/search.png" alt="" class="findBtn" onclick="findFriends('#friendId');" />
 			</tr>
-			<tr class="lineBtm" >
-				<th><img src="/images/chat/birth.png" alt="생일인 친구" class="birthImg" /></th>
-				<td>
-					<span class="birthText">
-							생일인 친구 보기
-					</span>
-				</td>
+<!-- 			<hr  class="nextLine" /> -->
+			<tr class="nextLine">
+				<th ></th><td></td>
 			</tr>
+			
 			<tr>
 				<th style="padding:35px;"><img src="" alt="" /></th>
 				<td><p></p></td>
@@ -66,16 +57,18 @@ $(function(){
 	</table>
 	
 </div>
-<div id="bottomBar">
-	<ul>
-		<li><img class="birthImg" src="/images/chat/friend.png" alt="" /></li>
-		<li><img src="/images/chat/talk.png" alt="" class="birthImg" /></li>
-		<li><img src="/images/chat/search.png" alt="" class="birthImg" onclick="findFriend();" /></li>
-		<li><img src="/images/chat/setting.png" alt="" class="birthImg" /></li>
-	</ul>
-</div>
-<form action="/user/myInfoView" method="post" id="userForm">
-	<input type="hidden" name="userSeq" id="userSeq"/>
+<!-- <div id="bottomBar"> -->
+<!-- 	<ul> -->
+<!-- 		<li><img class="birthImg" src="/images/chat/friend.png" alt="" /></li> -->
+<!-- 		<li><img src="/images/chat/talk.png" alt="" class="birthImg" /></li> -->
+<!-- 		<li><img src="/images/chat/search.png" alt="" class="birthImg" onclick="findFriend();" /></li> -->
+<!-- 		<li><img src="/images/chat/setting.png" alt="" class="birthImg" /></li> -->
+<!-- 	</ul> -->
+<!-- </div> -->
+<jsp:include page="/WEB-INF/jsp/common/footer.jsp"></jsp:include>
+
+<form action="/user/addFriend" method="post" id="userForm">
+	<input type="hidden" name="frId" id="frId"/>
 </form>
 </body>
 
@@ -85,105 +78,67 @@ function updateMyInfo(){
 	document.getElementById('userForm').submit();
 }
 
-
-// sockJS
-var socket=null;
-var stompClient=null;
-
-window.onload=function(){
-	if(${flag}){
-			connected();
-			setTimeout(function() {
-				console.log('메세지 보낸다.');
-				sendTest();
-				}, 3000);
-
-			setTimeout(function() {
-				console.log('두번째메세지 보낸다.');
-				sendTest2();
-				}, 10000);
-			
-		}
-	
-}
-function connected(){
-	socket=new SockJS("/chat");
-	 stompClient=Stomp.over(socket);
-	stompClient.connect({},function(frame){
-		console.log('연결중...')
-	
-		});
-}
-
-function sendTest(){
-
-	var dt={
-			'name':'test',
-			'message':'테스트입니다.',
-			'roomId':'test'
-			}
-	stompClient.send('/send/chatting',{},JSON.stringify(dt));
-}
-function sendTest2(){
-
-	var dt={
-			'name':'test222',
-			'message':'2222테스트입니다.',
-			'roomId':'test'
-			}
-	//send 메소드의 첫번째는 매핑 주소, 두번째는 header, 세번째는 body(파라미터 값)
-	stompClient.send('/send/chatting',{},JSON.stringify(dt));
-}
-function disCon(){
-	 if (stompClient !== null) {
-		    stompClient.disconnect();
-		  }
-		  console.log("Disconnected");
-}
-
 function menu(obj){
 // 	$('.hiddenBox').css('display','none');
 	 if ((event.button == 2) || (event.which == 3)) {
 		 $(obj).children().eq(2).children().eq(2).css('display','block')
 	  }
-}
 
-function talkWithFriend(friendNo){
-	$('.hiddenBox').css('display','none');
-	//친구와의 채팅방이 있는지 확인 후에 팝업창 띄운다.
-	var data={
-				'userSeq':'${sessionScope.loginVO.userSeq}',
-				'friendNo':friendNo
-			}
-	$.ajax({
-		url:'/chat/findChatroom',
-		data:data,
-		async:false,
-		type:'post',
-// 		contentType:'application/json',
-// 		dataType:'json',
-		success:function(dt){
-			//채팅방 번호 리턴받는다.
-			//친구의 이름도 리턴받는다(닉네임이 있다면 닉네임, 없다면 친구 닉네임, 없다면 친구 이름)
-			if(dt){
-					window.open('/chatroom/'+dt.chatroomNo,dt.friendName,'width=500, height=700, left=600, top=300,location=no,toolbar=no,menubar=no,resizable=no,directories=no,status=no')
-				}
-			}
-		});
-	
 }
 
 window.oncontextmenu = function () {
 	  return false;
 	};
 
-function findFriend(){
-	var userKey='${userKey}';
-	document.getElementById('userSeq').value=userKey;
-	document.getElementById('userForm').action='/user/findFriend';
-	document.getElementById('userForm').submit();
+function findFriends(obj){
+	var userId=$(obj).val();
+	$('.nextLine').after('');
+	$('.viewFriend').remove();
+	$.ajax({
+		url:'/user/findFriendById',
+		data:{'userId':userId},
+		type:'post',
+		success:function(data){
+				var src='';
+				if(data.imageUrl==null || data.imageUrl=='' || data.imageUrl===false){
+					src='/images/chat/defaultUserImg.png';
+					}else{
+						src=data.imageUrl;
+						}
+				var name;
+				if(data.nickName =='' || data.nickName ==null ){
+						name=data.userName;
+					}else{
+						name=data.nickName;
+						}
+				
+				var html='';
+				 html+='<tr onmousedown="menu(this);" class="viewFriend">';
+				 html+='<th><img src="'+src+'" class="profileImg" alt="" /></th>';
+				 html+='<td>';
+				html+='<span class="userName">';
+				html+=name+'</span>';
+				html+='<p class="statusMessage"><nobr>'+(data.statusMessage==null?"            sdfsf":data.statusMessage)+'<img src="/images/user/plusImage.png" class="plusImg" onclick="addFriendBtn(\''+data.userId+'\');" alt="" /></nobr></p>';
+				html+='</td></tr>';
+			$('.nextLine').after(html);
+				
+			}
+		
+		});
+	
 	
 	}
+function menu(obj){
+// 	$('.hiddenBox').css('display','none');
+	 if ((event.button == 2) || (event.which == 3)) {
+		 $(obj).children().eq(2).children().eq(2).css('display','block')
+	  }
+}
+function addFriendBtn(friendId){
+	var frId=friendId;
+	document.getElementById('frId').value=friendId;
+	document.getElementById('userForm').submit();
 	
+}
 </script>
 </html>

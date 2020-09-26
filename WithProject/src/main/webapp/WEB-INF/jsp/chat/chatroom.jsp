@@ -27,56 +27,58 @@ function doNotReload(){
 <body>
 <c:set value="${not empty sessionScope.loginVO.nickName?sessionScope.loginVO.nickName:sessionScope.loginVO.userName}" var="nickName"></c:set>
 <div id="section">
-	<table class="mainField">
-		<thead>
-			<colgroup>
-				<col width="20%" />
-				<col width="80%" />
-			</colgroup>
-			<tr class="lineBtm">
-<!-- 					profileImage -->
-					<td colspan="2">
-						<span class="userName">	
-							${fr.userName}
-						</span>
-					</td>
-				</th>
-			</tr>
-		</thead>
-	</table>
-	<div class="chatMain">
-	<ul >
-	<c:forEach items="${messageList }" var="msg" >
-		<c:choose>
-			<c:when test="${(msg.nickName eq fr.nickName)  }">
-				<li class="other">
-				<img class="birthImg" src="${not empty fr.imageUrl?fr.imageUrl:'/images/chat/defaultUserImg.png' }" alt="" />
-					<span class="msg">${msg.message }</span>
-				</li>
-			</c:when>
-			<c:when test="${msg.nickName ne fr.nickName }">
-				<li class="me">
-					<ol class="chatline">
-						<li>
-							<img class="birthImg" src="${not empty sessionScope.loginVO.imageUrl?sessionScope.loginVO.imageUrl:'/images/chat/defaultUserImg.png' }" alt="" />
-							<span class="nameSpace">${nickName }</span>
-						</li>
-						<li class="msgBack">
-							<span class="msg">${msg.message }</span>
-						</li>
-					</ol>
-				</li>
-			</c:when>
-		</c:choose>
-	</c:forEach>
+	<span class="userName">	
+		${fr.nickName}
+	</span>
+	<div class="wrap">
+		<div class="chatMain">
+		<table class="width100">
+			<tbody>
+				<c:forEach items="${messageList }" var="msg" >
+					<c:choose>
+						<c:when test="${(msg.nickName eq fr.nickName)  }">
+						<tr class="other">
+							<th><img class="birthImg" src="${not empty fr.imageUrl?fr.imageUrl:'/images/chat/defaultUserImg.png' }" alt="" />
+								<span class="nameSpace">${fr.nickName }</span>
+							</th>
+						</tr>
+						<tr class="other msgBox">
+							<td><span class="msg">${msg.message }</span></td>
+						</tr >
+						</c:when>
+						<c:when test="${msg.nickName ne fr.nickName }">
+							<tr class="me">
+								<th>
+									<img class="birthImg" src="${not empty sessionScope.loginVO.imageUrl?sessionScope.loginVO.imageUrl:'/images/chat/defaultUserImg.png' }" alt="" />
+									<span class="nameSpace">${nickName }</span>
+								</th>
+							</tr>
+							<tr class="me msgBox">
+								<td><span class="msg">${msg.message }</span></td>
+							</tr >
+						</c:when>
+					</c:choose>
+				</c:forEach>
+				<tr>
+					<th></th>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<th></th>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
 		
-	</ul>
+	<%-- 	${msg };; --%>
+	<%-- 	${fr } --%>
+			
+		</div>
 	</div>
-	
-				
-<%-- 			<c:forEach var="msg" items="${messageList }"> --%>
-				
-<%-- 			</c:forEach> --%>
 </div>
 <div id="bottomBar">
 	<textarea style="resize:none;" rows="10" onkeydown="check(this);" id="messageBox" ></textarea>
@@ -91,19 +93,29 @@ function doNotReload(){
 var stompClient=opener.stompClient;
 stompClient.subscribe('/personal/room/${chatroomNo}' , function (chat) {
 	var test=JSON.parse(chat.body);
-	console.log(test);
 	//본인인경우
 	if('${nickName}'===test.nickName){
-		var html="<li>";
+		var html='<tr class="me">';
+		html+='<th>';
 		html+='<img class="birthImg" src="'+test.imageUrl+'" alt="" />';
 		html+='<span class="nameSpace">'+test.nickName+'</span>';
-		html+='</li>';
-		html+='<li class="msgBack">';
-		html+='<span class="msg">'+test.message+'</span>';
-		html+='</li>';
-		$('.chatline').append(html);
+		html+='</th>';
+		html+='</tr>';
+		html+='<tr class="me msgBox">';
+		html+='<td><span class="msg">'+test.message+'</span></td>';
+		html+='</tr >';
+		$('.msgBox').last().after(html);
 		}else{
-			
+			var html='<tr class="other">';
+			html+='<th>';
+			html+='<img class="birthImg" src="'+test.imageUrl+'" alt="" />';
+			html+='<span class="nameSpace">'+test.nickName+'</span>';
+			html+='</th>';
+			html+='</tr>';
+			html+='<tr class="other msgBox">';
+			html+='<td><span class="msg">'+test.message+'</span></td>';
+			html+='</tr >';
+			$('.msgBox').last().after(html);
 			}
 	 });
 window.oncontextmenu = function () {

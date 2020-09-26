@@ -9,7 +9,7 @@
 		<result column="BIRTH" property="birth"/>
 		<result column="NICK_NAME" property="nickName"/>
 		<result column="STATUS_MESSAGE" property="statusMessage"/>
-		<result column="IMG_SEQ" property="imageUrl"/>
+		<result column="IMAGE_URL" property="imageUrl"/>
 	</resultMap>
 	
 	
@@ -75,10 +75,37 @@
 		WHERE USER_SEQ=#{friendSeq}
 	</select>
 	<select id="selectFriendNameByChatroomNo" resultType="cMap">
-		select b.user_name,
+		select NVL(B.NICK_NAME,b.user_name) AS NICK_NAME,
 			(SELECT CONCAT(SAVE_FILE_PATH,SAVE_FILE_NAME) FROM FILES WHERE FILE_SEQ=IMG_SEQ) AS IMAGE_URL
 		from chatroom_join a, users b
 		where a.join_user_seq=b.user_seq
 		and chatroom_no=#{roomCode}
+		and a.join_user_seq != #{userSeq}
 	</select>
-</mapper>
+	<select id="selectMyChatroomList" resultType="cMap">
+		with CHATROOM_CNT(CNT,CHATROOM_NO) as (
+			select COUNT(*) as CNT,
+					C.CHATROOM_NO
+			from CHATROOM_JOIN C
+		),
+		CHATROOMS as (select * from CHATROOM),
+		CHATROOM_JOINS as (select * from CHATROOM_JOIN)
+		<![CDATA[
+		select A.CHATROOM_NO
+				,IF((C.CNT > 2),(select  CONCAT(SAVE_FILE_PATH,SAVE_FILE_NAME) FROM FILES F where F.FILE_SEQ=A.CHATROOM_IMG_SEQ),(select  CONCAT(SAVE_FILE_PATH,SAVE_FILE_NAME) FROM FILES F,USERS G where F.FILE_SEQ=G.IMG_SEQ and G.USER_SEQ=B.join_USER_SEQ != #{userSeq})) as CHATROOM_IMG
+				,A.CHATROOM_NAME
+				,C.CNT AS USER_CNT
+		]]>
+		from CHATROOMS A, CHATROOM_JOINS B, CHATROOM_CNT C
+		where A.CHATROOM_NO=B.CHATROOM_NO
+		and A.CHATROOM_NO=C.CHATROOM_NO
+		and B.CHATROOM_NO=C.CHATROOM_NO
+		AND B.JOIN_USER_SEQ=#{userSeq}
+	</select>
+	<select id="selectChatroomUserList" resultType="string">
+		select GROUP_CONCAT(IF(B.NICK_NAME is null,B.USER_NAME,B.NICK_NAME)) as USER_LIST 
+		from chatroom_join A, USERS B
+		where A.JOIN_USER_SEQ=B.USER_SEQ
+		AND CHATROOM_NO=#{chatroomNo}
+	</select>
+</mapper> 

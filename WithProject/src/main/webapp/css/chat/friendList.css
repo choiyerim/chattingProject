@@ -11,13 +11,25 @@ div#section{position:relative;}
 #bottomBar2 table{width:100%;}
 #bottomBar2 table td{text-align: center;}
 .mainField tbody .lineBtm{border-bottom: 1px solid #eee;}
+.mainFieldFriend tbody .lineBtm{border-bottom: 1px solid #eee;}
+.mainFieldFriend{width:100%;border-collapse:collapse}
+.mainFieldFriend tr td{width:380px;}
 .mainField{width:100%;border-collapse:collapse}
 .birthText{font-size: 17px;}
 .birthImg{border-radius:50%;float: left;width: 50px;padding:5px;}
 .grayText{font-size: 13px;color:#696969;}
+.nextLine{border-bottom: 1px solid #eee;}
 .friendList{position: relative;}
 .noneList{list-style: none;padding-inline-start: 10px;margin-block-start: 5px;margin-block-end:5px;margin-inline-end:10px;}
 .noneList li{padding:3px;font-size: 17px;border-bottom: 1px solid #eee;} 
 .hiddenBox{position:absolute;height: 100px; background:white; border:1px solid #cecccc;width:150px;right:40px;   bottom: 100px;display: none;text-align: center;}
 .touch{cursor:pointer;}
 .btmImg{border-radius:50%;width: 50px;padding:5px;}
+.findFriend{width:40%;margin:0 auto;height: 30px;font-size: 20px;}
+.findBtn{width:40px;position: relative;top: 14px;cursor:pointer;}
+.plusImg{float:right;width: 40px;right: 50px;position: absolute;bottom: 80px;cursor:pointer;}
+
+
+
+
+

@@ -23,4 +23,6 @@ public interface UserService {
 
 	String selectUserId(Map paramMap);
 
+	void insertUserFriend(Map param);
+
 }

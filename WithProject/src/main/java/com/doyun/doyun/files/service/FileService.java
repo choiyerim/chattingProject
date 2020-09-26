@@ -1,9 +1,10 @@
 package com.doyun.doyun.files.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public interface FileService {
 
-	int insertFiles(HashMap<String, String> fileMap);
+	HashMap<String, Object> insertFiles(HashMap<String, Object> fileMap);
 	
 }

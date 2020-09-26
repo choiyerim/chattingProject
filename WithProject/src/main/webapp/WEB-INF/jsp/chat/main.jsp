@@ -14,14 +14,7 @@
 <script src="/js/stomp.js"></script>
 <script src="/js/sockjs.js"></script>
 <script>
-function doNotReload(){
-    if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) || (event.keyCode == 116) ) {
-        event.keyCode = 0;
-        event.cancelBubble = true;
-        event.returnValue = false;
-    } 
-}
-document.onkeydown = doNotReload;
+
 $(function(){
 	window.resize(500,700)
 })
@@ -47,7 +40,7 @@ $(function(){
 						<span class="userName">
 							${not empty sessionScope.loginVO.nickName?sessionScope.loginVO.nickName:sessionScope.loginVO.userName  }
 						</span>
-						<p class="statusMessage">${sessionScope.loginVO.statusMessage }피곤하다....</p>
+						<p class="statusMessage">${sessionScope.loginVO.statusMessage }</p>
 					</td>
 			</tr>
 			<tr class="lineBtm" >
@@ -73,7 +66,7 @@ $(function(){
 						<span class="userName">
 							${not empty fr.nickName?fr.nickName:fr.userName  }
 						</span>
-						<p class="statusMessage"><nobr>${fr.statusMessage }피곤하다....dddddddddddddddddddddddddddddddddddddddddddddddd</nobr></p>
+						<p class="statusMessage"><nobr>${fr.statusMessage }</nobr></p>
 						<div class="hiddenBox" >
 							<ul class="noneList">
 								<li onclick="talkWithFriend('${fr.friendNo}')">대화하기</li>
@@ -93,14 +86,9 @@ $(function(){
 	</table>
 	
 </div>
-<div id="bottomBar">
-	<ul>
-		<li><img class="birthImg" src="/images/chat/friend.png" alt="" /></li>
-		<li><img src="/images/chat/talk.png" alt="" class="birthImg" /></li>
-		<li><img src="/images/chat/search.png" alt="" class="birthImg" onclick="findFriend();" /></li>
-		<li><img src="/images/chat/setting.png" alt="" class="birthImg" /></li>
-	</ul>
-</div>
+<jsp:include page="/WEB-INF/jsp/common/footer.jsp"></jsp:include>
+
+
 <form action="/user/myInfoView" method="post" id="userForm">
 	<input type="hidden" name="userSeq" id="userSeq"/>
 </form>
@@ -170,7 +158,7 @@ function disCon(){
 
 function menu(obj){
 // 	$('.hiddenBox').css('display','none');
-	 if ((event.button == 2) || (event.which == 3)) {
+	 if ((event.button == 2) || (event.which == 3) || event.button==0) {
 		 $(obj).children().eq(2).children().eq(2).css('display','block')
 	  }
 }
@@ -200,17 +188,7 @@ function talkWithFriend(friendNo){
 	
 }
 
-window.oncontextmenu = function () {
-	  return false;
-	};
 
-function findFriend(){
-	var userKey='${userKey}';
-	document.getElementById('userSeq').value=userKey;
-	document.getElementById('userForm').action='/user/findFriend';
-	document.getElementById('userForm').submit();
-	
-	}
 	
 </script>
 </html>

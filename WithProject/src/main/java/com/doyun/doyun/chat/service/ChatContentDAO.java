@@ -8,6 +8,8 @@ import javax.inject.Inject;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,6 +43,16 @@ public class ChatContentDAO {
 	public void insertMessage(MessageVO message) {
 //		ArrayList<MessageVO> mList=new ArrayList<MessageVO>();
 		mongo.insert(message, "chatting");
+	}
+
+	public MessageVO selectLastMessage(String chatroomNo) {
+		Query query=new Query();
+		Criteria cri=Criteria.where("chatroomNo").is(chatroomNo);
+		query.with(new Sort(Direction.DESC,"insertDate"));
+		query.addCriteria(cri).limit(1);
+		
+		MessageVO message=mongo.findOne(query, MessageVO.class,"chatting");
+		return message;
 	}
 	
 	//update예시

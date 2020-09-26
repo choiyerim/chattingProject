@@ -1,6 +1,7 @@
 package com.doyun.doyun.files.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ public class FileServiceImpl implements FileService {
 	FileDAO fileDAO;
 
 	@Override
-	public int insertFiles(HashMap<String, String> fileMap) {
+	public HashMap<String, Object>  insertFiles(HashMap<String, Object> fileMap) {
 		return fileDAO.insertFiles(fileMap);
 	}
 }
